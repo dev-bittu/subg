@@ -1,8 +1,8 @@
 package config
 
 import (
-  "encoding/json"
-  _ "embed"
+	_ "embed"
+	"encoding/json"
 )
 
 //go:embed config.json
@@ -11,9 +11,10 @@ var cfg []byte
 var Config map[string]interface{}
 
 func init() {
-  err := json.Unmarshal(cfg, &Config)
-  if err != nil {
-    println("Cant load config")
-    panic(err)
-  }
+	// load config & assign to Config
+	err := json.Unmarshal(cfg, &Config)
+	if err != nil {
+		println("Cant load config")
+		panic(err)
+	}
 }
