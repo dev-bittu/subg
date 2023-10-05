@@ -1,0 +1,12 @@
+{
+  "name": "subg",
+  "author": "dev-bittu",
+  "version": "0.0.1",
+  "repo": "github.com/dev-bittu/subg",
+  "contact": {
+    "github": "github.com/dev-bittu",
+    "mail": "devbittu@proton.me"
+  },
+  "title": "it is subdomain scanner tool written in golang",
+  "desc": "it is small yet powerful golang based subdomain scanner tool."
+}

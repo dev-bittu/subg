@@ -1,11 +1,11 @@
-package scanner
+package file
 
 import (
 	"errors"
 	"os"
 )
 
-func isFileExists(file string) (bool, error) {
+func IsFileExists(file string) (bool, error) {
   _, err := os.Stat(file)
   if err == nil {
     return true, nil
