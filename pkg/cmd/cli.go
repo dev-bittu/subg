@@ -1,4 +1,4 @@
-package cli
+package cmd
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	alert "github.com/dev-bittu/go-alert"
+	alert "github.com/dev-bittu/goalert"
 	"github.com/dev-bittu/subg/config"
 	"github.com/dev-bittu/subg/pkg/scanner"
 	"github.com/spf13/cobra"
@@ -19,10 +19,15 @@ var rootCmd = &cobra.Command{
 	Version: config.Config["version"].(string),
 	Run: func(cmd *cobra.Command, args []string) {
 		if !isConnectedToInternet() {
-			fmt.Println(alert.Red())
+			fmt.Println(alert.Red("hii"))
 			return
 		}
-		scanr, err := scanner.NewScanner(Domain, Wordlist, Thread)
+		scanr, err := scanner.NewScanner(
+			domain: Domain,
+			wordlist: Wordlist,
+			thread: Thread,
+			output: OutputFile,
+		)
 		if err != nil {
 			fmt.Println(err)
 		}
