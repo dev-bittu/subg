@@ -8,5 +8,6 @@
     "mail": "devbittu@proton.me"
   },
   "title": "it is subdomain scanner tool written in golang",
-  "desc": "it is small yet powerful golang based subdomain scanner tool."
+  "desc": "it is small yet powerfual golang based subdomain scanner tool.",
+  "example": "subg -d example.com -w wdlist/subdomain.txt -t 50 -o active_subd.txt"
 }
