@@ -59,7 +59,7 @@ func scanSubdomains(s *scanner, subdomain *subdomain.Subdomains) {
 				fmt.Println(alert.Yellow("[+]"), alert.Green(subd))
 				subdomain.AddSubdomain(subd)
 			} else {
-				fmt.Println(alert.Yellow("[-]"), alert.Red(subd))
+				fmt.Println(alert.Cyan("[-]"), alert.Red(subd))
 			}
 		}(subd, err)
 	}

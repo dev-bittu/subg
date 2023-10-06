@@ -14,10 +14,10 @@ type scanner struct {
 	WordlistPath string
 	Thread       int
 	OutputFile   string
-	Wdlst        *os.File
+	Wordlist     *os.File
 }
 
-func NewScanner(domain string, wdlist string, thread int) (*scanner, error) {
+func NewScanner(domain string, wdlist string, thread int, output string) (*scanner, error) {
 	f, err := os.Open(wdlist)
 	if err != nil {
 		return nil, err
@@ -27,13 +27,13 @@ func NewScanner(domain string, wdlist string, thread int) (*scanner, error) {
 		Domain:       domain,
 		WordlistPath: wdlist,
 		Thread:       thread,
-		OutputFile:   ".subg_logs",
-		Wdlst:        f,
+		OutputFile:   output,
+		Wordlist:     f,
 	}, nil
 }
 
 func (s *scanner) Scan() error {
-	defer s.Wdlst.Close()
+	defer s.Wordlist.Close()
 
 	banner.ShowBanner(s.Domain, s.Thread)
 
@@ -47,7 +47,7 @@ func (s *scanner) Scan() error {
 
 	sbd := subdomain.NewSubdomains()
 
-	scanSubdomains(*s, sbd)
+	scanSubdomains(s, sbd)
 
 	err = sbd.WriteOnFile(s.OutputFile)
 	if err != nil {
