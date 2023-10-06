@@ -24,6 +24,7 @@ cd subg
 go build .
 ```
 Now, you can simply check help by ./sibg -h
+
 4. Add to path:
 ```bash
 cp subg $PATH/subg
