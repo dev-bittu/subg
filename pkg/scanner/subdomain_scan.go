@@ -4,13 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"net"
 	"strings"
 	"sync"
 	"time"
 
-	alert "github.com/dev-bittu/goalert"
-	"github.com/dev-bittu/subg/pkg/subdomain"
+	"github.com/dev-bittu/subg/internal/net"
 )
 
 var (
@@ -18,7 +16,7 @@ var (
 	mu = sync.Mutex{}
 )
 
-func scanSubdomains(s *scanner, subdomain *subdomain.Subdomains) {
+func scanSubdomains(s *scanner, subdomain *net.Subdomains) {
 	// Scan subdomains and write it to output file
 
 	reader := bufio.NewReader(s.Wordlist)
@@ -54,20 +52,8 @@ func scanSubdomains(s *scanner, subdomain *subdomain.Subdomains) {
 				"\r",
 				"",
 			)
-			exists := isSubdExists(subd + s.Domain)
-			if exists {
-				fmt.Println(alert.Yellow("[+]"), alert.Green(subd))
-				subdomain.AddSubdomain(subd)
-			} else {
-				fmt.Println(alert.Cyan("[-]"), alert.Red(subd))
-			}
+			_ = subdomain.Check(subd + s.Domain)
 		}(subd, err)
 	}
 	wg.Wait()
-}
-
-func isSubdExists(d string) bool {
-	// Check if given subdomain exists
-	_, err := net.LookupHost(d)
-	return err == nil
 }

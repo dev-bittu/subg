@@ -6,7 +6,7 @@ import (
 
 	"github.com/dev-bittu/subg/internal/banner"
 	"github.com/dev-bittu/subg/internal/file"
-	"github.com/dev-bittu/subg/pkg/subdomain"
+	"github.com/dev-bittu/subg/internal/net"
 )
 
 type scanner struct {
@@ -47,7 +47,7 @@ func (s *scanner) Scan() error {
 		return errors.New("Wordlist " + s.WordlistPath + " not exists")
 	}
 
-	sbd := subdomain.NewSubdomains()
+	sbd := net.NewSubdomains(s.Domain, s.Timeout)
 
 	scanSubdomains(s, sbd)
 
