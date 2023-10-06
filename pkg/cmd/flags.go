@@ -1,44 +1,44 @@
 package cmd
 
 var (
-	Wordlist   string
-	Domain     string
-	Thread     int
-	OutputFile string
-	Timeout    int
+	wordlist   string
+	domain     string
+	thread     int
+	outputFile string
+	timeout    int
 )
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(
-		&Domain,
+		&domain,
 		"domain",
 		"d",
 		"",
 		"Domain to scan. Example: example.com",
 	)
 	rootCmd.PersistentFlags().StringVarP(
-		&Wordlist,
+		&wordlist,
 		"wordlist",
 		"w",
 		"",
 		"Wordlist path (delimiter: newline or \\n). Example: wdlist/subdomains.txt",
 	)
 	rootCmd.PersistentFlags().StringVarP(
-		&OutputFile,
+		&outputFile,
 		"output",
 		"o",
 		".subg.log",
 		"Ouput file path (delimiter: newline or \\n). Example: subdomains.txt",
 	)
 	rootCmd.PersistentFlags().IntVarP(
-		&Timeout,
+		&timeout,
 		"timeout",
 		"T",
 		2,
 		"Timeout (in sec)",
 	)
 	rootCmd.PersistentFlags().IntVarP(
-		&Thread,
+		&thread,
 		"thread",
 		"t",
 		50,

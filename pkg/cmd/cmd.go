@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	alert "github.com/dev-bittu/goalert"
 	"github.com/dev-bittu/subg/config"
+	"github.com/dev-bittu/subg/internal/net"
 	"github.com/dev-bittu/subg/pkg/scanner"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +18,11 @@ var rootCmd = &cobra.Command{
 	Version: config.Config["version"].(string),
 	Example: config.Config["example"].(string),
 	Run: func(cmd *cobra.Command, args []string) {
-		scanr, err := scanner.NewScanner(Domain, Wordlist, Thread, OutputFile, Timeout)
+		if !net.IsOnline() {
+			fmt.Println(alert.Red("You are not connected to internet,\nPlease check your wire."))
+			os.Exit(0)
+		}
+		scanr, err := scanner.NewScanner(domain, wordlist, thread, outputFile, timeout)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -30,6 +36,6 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(alert.Red("Solve the problem to move further:"))
-		alert.Info("Problem: "+err.Error())
+		alert.Info("Problem: " + err.Error())
 	}
 }
