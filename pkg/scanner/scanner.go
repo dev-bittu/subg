@@ -15,9 +15,10 @@ type scanner struct {
 	Thread       int
 	OutputFile   string
 	Wordlist     *os.File
+	Timeout int
 }
 
-func NewScanner(domain string, wdlist string, thread int, output string) (*scanner, error) {
+func NewScanner(domain string, wdlist string, thread int, output string, timeout int) (*scanner, error) {
 	f, err := os.Open(wdlist)
 	if err != nil {
 		return nil, err
@@ -29,6 +30,7 @@ func NewScanner(domain string, wdlist string, thread int, output string) (*scann
 		Thread:       thread,
 		OutputFile:   output,
 		Wordlist:     f,
+		Timeout: timeout,
 	}, nil
 }
 

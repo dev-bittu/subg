@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Version: config.Config["version"].(string),
 	Example: config.Config["example"].(string),
 	Run: func(cmd *cobra.Command, args []string) {
-		scanr, err := scanner.NewScanner(Domain, Wordlist, Thread, OutputFile)
+		scanr, err := scanner.NewScanner(Domain, Wordlist, Thread, OutputFile, Timeout)
 		if err != nil {
 			fmt.Println(err)
 		}

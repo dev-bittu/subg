@@ -5,6 +5,7 @@ var (
 	Domain     string
 	Thread     int
 	OutputFile string
+	Timeout    int
 )
 
 func init() {
@@ -28,6 +29,13 @@ func init() {
 		"o",
 		".subg.log",
 		"Ouput file path (delimiter: newline or \\n). Example: subdomains.txt",
+	)
+	rootCmd.PersistentFlags().IntVarP(
+		&Timeout,
+		"timeout",
+		"T",
+		2,
+		"Timeout (in sec)",
 	)
 	rootCmd.PersistentFlags().IntVarP(
 		&Thread,
