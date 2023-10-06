@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	alert "github.com/dev-bittu/goalert"
 	"github.com/dev-bittu/subg/pkg/subdomain"
 )
 
@@ -17,17 +18,17 @@ var (
 	mu = sync.Mutex{}
 )
 
-func scanSubdomains(s scanner, subdomain *subdomain.Subdomains) {
+func scanSubdomains(s *scanner, subdomain *subdomain.Subdomains) {
 	// Scan subdomains and write it to output file
 
-	reader := bufio.NewReader(s.Wdlst)
+	reader := bufio.NewReader(s.Wordlist)
 	var (
 		end     = false // indicate whether file is end or not
 		count_t = 0     // count no of func executed concurrently
 	)
 
 	for !end {
-		sub, err := reader.ReadString('\n')
+		subd, err := reader.ReadString('\n')
 		if count_t == s.Thread {
 			count_t = 0
 			time.Sleep(time.Second * 1)
@@ -55,10 +56,12 @@ func scanSubdomains(s scanner, subdomain *subdomain.Subdomains) {
 			)
 			exists := isSubdExists(subd + s.Domain)
 			if exists {
-				fmt.Println(subd)
+				fmt.Println(alert.Yellow("[+]"), alert.Green(subd))
 				subdomain.AddSubdomain(subd)
+			} else {
+				fmt.Println(alert.Yellow("[-]"), alert.Red(subd))
 			}
-		}(sub, err)
+		}(subd, err)
 	}
 	wg.Wait()
 }
