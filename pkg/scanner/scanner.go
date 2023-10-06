@@ -47,14 +47,13 @@ func (s *scanner) Scan() error {
 		return errors.New("Wordlist " + s.WordlistPath + " not exists")
 	}
 
-	sbd := net.NewSubdomains(s.Domain, s.Timeout)
-
-	scanSubdomains(s, sbd)
-
-	err = sbd.WriteOnFile(s.OutputFile)
+	sbd, err := net.NewSubdomains(s.Domain, s.Timeout, s.OutputFile)
 	if err != nil {
 		return err
 	}
+	defer sbd.CloseFile()
+
+	scanSubdomains(s, sbd)
 
 	return nil
 }

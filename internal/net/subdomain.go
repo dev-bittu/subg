@@ -13,22 +13,18 @@ import (
 type Subdomains struct {
 	domain     string
 	subdomains []string
+	outputFile *os.File
 	client     http.Client
 	mu         sync.Mutex
-}
-
-func (s *Subdomains) AddSubdomain(subd string) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	s.subdomains = append(s.subdomains, subd)
 }
 
 func (s *Subdomains) Check(subdomain string) bool {
 	exists := false
 
+	// implement logic, how to find that subdomain exists
+
 	if exists {
-		s.AddSubdomain(subdomain + s.domain)
+		s.writeOnFile(subdomain+"\n")
 		fmt.Println(alert.Yellow("[+]"), alert.Green(subdomain))
 	} else {
 		fmt.Println(alert.Cyan("[-]"), alert.Red(subdomain))
@@ -37,29 +33,29 @@ func (s *Subdomains) Check(subdomain string) bool {
 	return exists
 }
 
-func (s *Subdomains) WriteOnFile(file_path string) error {
-	f, err := os.Create(file_path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+func (s *Subdomains) writeOnFile(msg string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
-	for _, d := range s.subdomains {
-		_, err := f.WriteString(d + "\n")
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+	s.outputFile.WriteString(msg)
 }
 
-func NewSubdomains(domain string, timeout int) *Subdomains {
+func (s *Subdomains) CloseFile() {
+	s.outputFile.Close()
+}
+
+func NewSubdomains(domain string, timeout int, output string) (*Subdomains, error) {
+	f, err := os.Create(output)
+	if err != nil {
+		return nil, err
+	}
 	return &Subdomains{
 		domain:     domain,
 		subdomains: []string{},
 		mu:         sync.Mutex{},
+		outputFile: f,
 		client: http.Client{
 			Timeout: time.Second * time.Duration(timeout),
 		},
-	}
+	}, nil
 }
