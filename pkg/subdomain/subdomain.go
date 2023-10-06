@@ -25,7 +25,7 @@ func (s *Subdomains) WriteOnFile(file_path string) error {
 	defer f.Close()
 
 	for _, d := range s.subdomains {
-		_, err := f.WriteString(d)
+		_, err := f.WriteString(d+"\n")
 		if err != nil {
 			return err
 		}

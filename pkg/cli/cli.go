@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	alert "github.com/dev-bittu/go-alert"
 	"github.com/dev-bittu/subg/config"
 	"github.com/dev-bittu/subg/pkg/scanner"
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ var rootCmd = &cobra.Command{
 	Version: config.Config["version"].(string),
 	Run: func(cmd *cobra.Command, args []string) {
 		if !isConnectedToInternet() {
-			fmt.Println("You are not connected to internet.\nCheck your connection.")
+			fmt.Println(alert.Red())
 			return
 		}
 		scanr, err := scanner.NewScanner(Domain, Wordlist, Thread)

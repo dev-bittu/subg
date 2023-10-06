@@ -2,7 +2,6 @@ package scanner
 
 import (
 	"errors"
-	"fmt"
 	"os"
 
 	"github.com/dev-bittu/subg/internal/banner"
@@ -38,7 +37,6 @@ func (s *scanner) Scan() error {
 
 	banner.ShowBanner(s.Domain, s.Thread)
 
-	fmt.Println("Checking if wdlist exists")
 	fe, err := file.IsFileExists(s.WordlistPath)
 	if err != nil {
 		return err
