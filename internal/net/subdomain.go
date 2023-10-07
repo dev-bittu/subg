@@ -21,13 +21,23 @@ type Subdomains struct {
 func (s *Subdomains) Check(subdomain string) bool {
 	exists := false
 
-	// implement logic, how to find that subdomain exists
+	resp, err := http.Get(subdomain + "." + s.domain)
+	if err != nil {
+		return exists
+	} 
+	if resp.StatusCode == 200 {
+		exists = true
+	}
 
 	if exists {
-		s.writeOnFile(subdomain+"\n")
-		fmt.Println(alert.Yellow("[+]"), alert.Green(subdomain))
+		s.writeOnFile(subdomain + "\n")
+		fmt.Println(
+			alert.Yellow(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
+		)
 	} else {
-		fmt.Println(alert.Cyan("[-]"), alert.Red(subdomain))
+		fmt.Println(
+    	alert.Green(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
+    )
 	}
 
 	return exists
