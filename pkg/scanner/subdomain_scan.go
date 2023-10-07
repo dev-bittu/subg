@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	alert "github.com/dev-bittu/goalert"
 	"github.com/dev-bittu/subg/internal/net"
 )
 
@@ -52,8 +53,12 @@ func scanSubdomains(s *scanner, subdomain *net.Subdomains) {
 				"\r",
 				"",
 			)
-			_ = subdomain.Check(subd + s.Domain)
+			_, err = subdomain.Check(subd)
+			if err != nil {
+				alert.Warn(err.Error())
+			}
 		}(subd, err)
 	}
 	wg.Wait()
+	fmt.Println(subdomain.Scan)
 }

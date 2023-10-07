@@ -22,7 +22,9 @@ var rootCmd = &cobra.Command{
 			fmt.Println(alert.Red("You are not connected to internet,\nPlease check your wire."))
 			os.Exit(0)
 		}
-		scanr, err := scanner.NewScanner(domain, wordlist, thread, outputFile, timeout)
+		scanr, err := scanner.NewScanner(
+			domain, wordlist, thread, outputFile, timeout, protocol,
+		)
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -16,15 +16,30 @@ type Subdomains struct {
 	outputFile *os.File
 	client     http.Client
 	mu         sync.Mutex
+	protocol   string
+	Scan       uint16
 }
 
-func (s *Subdomains) Check(subdomain string) bool {
-	exists := false
+func (s *Subdomains) incrementScan() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
-	resp, err := http.Get(subdomain + "." + s.domain)
+	s.Scan++
+}
+
+func (s *Subdomains) Check(subdomain string) (bool, error) {
+	s.incrementScan()
+	exists := false
+	url := fmt.Sprintf("%s://%s.%s", s.protocol, subdomain, s.domain)
+
+	resp, err := http.Get(url)
 	if err != nil {
-		return exists
-	} 
+		if err.Error() != fmt.Sprintf("Get \"%s\": dial tcp: lookup %s: no such host", url, subdomain+"."+s.domain) {
+		return exists, err
+	} else {
+		return exists, nil
+	}
+	}
 	if resp.StatusCode == 200 {
 		exists = true
 	}
@@ -32,15 +47,15 @@ func (s *Subdomains) Check(subdomain string) bool {
 	if exists {
 		s.writeOnFile(subdomain + "\n")
 		fmt.Println(
-			alert.Yellow(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
+			alert.Green(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
 		)
 	} else {
 		fmt.Println(
-    	alert.Green(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
-    )
+			alert.Red(fmt.Sprintf("[%d] %s", resp.StatusCode, subdomain)),
+		)
 	}
 
-	return exists
+	return exists, nil
 }
 
 func (s *Subdomains) writeOnFile(msg string) {
@@ -54,7 +69,7 @@ func (s *Subdomains) CloseFile() {
 	s.outputFile.Close()
 }
 
-func NewSubdomains(domain string, timeout int, output string) (*Subdomains, error) {
+func NewSubdomains(domain string, timeout int, output string, protocol string) (*Subdomains, error) {
 	f, err := os.Create(output)
 	if err != nil {
 		return nil, err
@@ -64,6 +79,7 @@ func NewSubdomains(domain string, timeout int, output string) (*Subdomains, erro
 		subdomains: []string{},
 		mu:         sync.Mutex{},
 		outputFile: f,
+		protocol:   protocol,
 		client: http.Client{
 			Timeout: time.Second * time.Duration(timeout),
 		},

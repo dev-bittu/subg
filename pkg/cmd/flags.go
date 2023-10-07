@@ -6,6 +6,7 @@ var (
 	thread     int
 	outputFile string
 	timeout    int
+	protocol   string
 )
 
 func init() {
@@ -43,6 +44,13 @@ func init() {
 		"t",
 		50,
 		"Thread [subdomains/sec]",
+	)
+	rootCmd.PersistentFlags().StringVarP(
+		&protocol,
+		"protocol",
+		"p",
+		"https",
+		"Protocol to be used. Example: https (https://example.com), http",
 	)
 
 	rootCmd.MarkPersistentFlagRequired("domain")

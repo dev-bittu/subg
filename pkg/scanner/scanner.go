@@ -15,10 +15,11 @@ type scanner struct {
 	Thread       int
 	OutputFile   string
 	Wordlist     *os.File
-	Timeout int
+	Timeout      int
+	Protocol     string
 }
 
-func NewScanner(domain string, wdlist string, thread int, output string, timeout int) (*scanner, error) {
+func NewScanner(domain string, wdlist string, thread int, output string, timeout int, protocol string) (*scanner, error) {
 	f, err := os.Open(wdlist)
 	if err != nil {
 		return nil, err
@@ -30,7 +31,8 @@ func NewScanner(domain string, wdlist string, thread int, output string, timeout
 		Thread:       thread,
 		OutputFile:   output,
 		Wordlist:     f,
-		Timeout: timeout,
+		Timeout:      timeout,
+		Protocol:     protocol,
 	}, nil
 }
 
@@ -47,7 +49,7 @@ func (s *scanner) Scan() error {
 		return errors.New("Wordlist " + s.WordlistPath + " not exists")
 	}
 
-	sbd, err := net.NewSubdomains(s.Domain, s.Timeout, s.OutputFile)
+	sbd, err := net.NewSubdomains(s.Domain, s.Timeout, s.OutputFile, s.Protocol)
 	if err != nil {
 		return err
 	}
